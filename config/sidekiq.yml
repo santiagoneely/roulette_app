@@ -1,0 +1,5 @@
+:concurrency: 5
+:schedule:
+  roulette_round_job:
+    every: "3m"
+    class: "RouletteRoundJob"

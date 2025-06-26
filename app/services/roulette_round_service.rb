@@ -1,0 +1,60 @@
+class RouletteRoundService
+  COLORS = %w[verde rojo negro].freeze
+  COLOR_PROBABILITIES = [0.02, 0.49, 0.49] # verde, rojo, negro
+
+  def self.perform
+    Rails.logger.info "Jugando una ronda de ruleta"
+
+    round = Round.create!(result: nil)
+    players = Player.where("money > 0")
+
+    bets = players.map do |player|
+      Rails.logger.info "Jugador #{player.name} apuesta #{player.money}"
+      amount = bet_amount(player.money)
+      color = pick_color
+      Rails.logger.info "Jugador #{player.name} apuesta #{amount} a #{color}"
+      Bet.create!(
+        player: player,
+        round: round,
+        amount: amount,
+        color: color
+      )
+    end
+
+    result = pick_color
+    Rails.logger.info "Resultado de la ronda: #{result}"
+    round.update!(result: result)
+
+    bets.each do |bet|
+      payout = payout_for_bet(bet, result)
+      player = bet.player
+      player.update!(money: player.money - bet.amount + payout)
+    end
+
+    round
+  end
+
+  def self.bet_amount(money)
+    return money if money <= 1000
+    percent = rand(8..15) / 100.0
+    (money * percent).to_i
+  end
+
+  def self.pick_color
+    r = rand
+    case r
+    when 0...0.02 then "verde"
+    when 0.02...0.51 then "rojo"
+    else "negro"
+    end
+  end
+
+  def self.payout_for_bet(bet, result)
+    return 0 unless bet.color == result
+    if result == "verde"
+      bet.amount * 15
+    else
+      bet.amount * 2
+    end
+  end
+end

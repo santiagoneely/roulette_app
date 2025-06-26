@@ -1,0 +1,17 @@
+<h1>Jugador: <%= @player.name %></h1>
+
+<p>
+  <strong>Nombre:</strong>
+  <%= @player.name %>
+</p>
+
+<p>
+  <strong>Dinero:</strong>
+  <%= number_to_currency(@player.money, unit: "$") %>
+</p>
+
+<%= link_to 'Editar', edit_player_path(@player) %> |
+<%= link_to 'Volver a la lista', players_path %>
+<%= button_to 'ELIMINAR', player_path(@player), method: :delete %>
+
+<%= csrf_meta_tags %>

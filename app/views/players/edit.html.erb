@@ -1,0 +1,30 @@
+<h1>Editar Jugador</h1>
+
+<%= form_with(model: @player, local: true) do |form| %>
+  <% if @player.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@player.errors.count, "error") %> impidieron guardar el jugador:</h2>
+      <ul>
+        <% @player.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, "Nombre" %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :money, "Dinero" %><br>
+    <%= form.number_field :money %>
+  </div>
+
+  <div>
+    <%= form.submit "Actualizar Jugador" %>
+  </div>
+<% end %>
+
+<%= link_to 'Volver a la lista', players_path %>
