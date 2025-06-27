@@ -23,6 +23,11 @@
   </div>
 
   <div>
+    <%= form.label :profile, "Perfil" %><br>
+    <%= form.select :profile, options_for_select([["Normal", nil], ["IA", "ia"]], @player.profile) %>
+  </div>
+
+  <div>
     <%= form.submit "Crear Jugador" %>
   </div>
 <% end %>

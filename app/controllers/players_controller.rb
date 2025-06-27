@@ -44,6 +44,6 @@ class PlayersController < ApplicationController
     end
 
     def player_params
-      params.require(:player).permit(:name, :money)
+      params.require(:player).permit(:name, :money, :profile)
     end
 end
