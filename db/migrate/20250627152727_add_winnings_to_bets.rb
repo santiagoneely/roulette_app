@@ -1,0 +1,5 @@
+class AddWinningsToBets < ActiveRecord::Migration[8.0]
+  def change
+    add_column :bets, :winnings, :integer
+  end
+end

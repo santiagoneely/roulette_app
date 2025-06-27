@@ -16,7 +16,7 @@ class PlayersController < ApplicationController
     @player = Player.new(player_params)
     @player.money ||= 10000
     if @player.save
-      redirect_to @player, notice: 'Player was successfully created.'
+      redirect_to @player, notice: "Player was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class PlayersController < ApplicationController
 
   def update
     if @player.update(player_params)
-      redirect_to @player, notice: 'Player was successfully updated.'
+      redirect_to @player, notice: "Player was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class PlayersController < ApplicationController
 
   def destroy
     @player.destroy
-    redirect_to players_url, notice: 'Player was successfully destroyed.'
+    redirect_to players_url, notice: "Player was successfully destroyed."
   end
 
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_26_225252) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_27_225621) do
   create_table "bets", force: :cascade do |t|
     t.integer "amount"
     t.string "color"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_26_225252) do
     t.integer "round_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "winnings"
     t.index ["player_id"], name: "index_bets_on_player_id"
     t.index ["round_id"], name: "index_bets_on_round_id"
   end
@@ -27,6 +28,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_26_225252) do
     t.integer "money", default: 10000
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "profile"
   end
 
   create_table "rounds", force: :cascade do |t|

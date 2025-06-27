@@ -1,0 +1,47 @@
+<h1>Historial de Rondas</h1>
+
+<%= link_to 'Ver jugadores', players_path, class: 'btn btn-primary' %>
+
+<p>
+  Las rondas se juegan automáticamente cada 3 minutos.<br>
+  Si quieres, puedes ejecutar una nueva ronda manualmente:
+  <%= button_to 'Jugar nueva ronda ahora', play_rounds_path, method: :post, class: 'btn btn-success', form: { data: { turbo_confirm: '¿Estás seguro que quieres jugar una nueva ronda ahora?' } } %>
+</p>
+
+<% if WeatherService.hot_week_ahead? %>
+  <p style="color: orange;"><strong>¡Semana cálida! Las apuestas son más conservadoras (3%-7%).</strong></p>
+<% else %>
+  <p><strong>Semana normal: apuestas entre 8%-15%.</strong></p>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Fecha/Hora</th>
+      <th>Resultado Ruleta</th>
+      <th>Apuestas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @rounds.each do |round| %>
+      <tr>
+        <td><%= round.created_at.strftime("%d-%m-%Y %H:%M") %></td>
+        <td><%= round.result.present? ? round.result.capitalize : "Pendiente" %></td>
+        <td>
+          <ul>
+            <% round.bets.each do |bet| %>
+              <li>
+                <strong><%= bet.player.name %></strong> apostó <%= number_to_currency(bet.amount, unit: '$') %> a <%= bet.color.capitalize %>
+                <% if bet.color == round.result %>
+                  <span style="color: green;">(Ganó <%= number_to_currency(bet.winnings, unit: '$') %>)</span>
+                <% else %>
+                  <span style="color: red;">(Perdió)</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

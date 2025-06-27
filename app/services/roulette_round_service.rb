@@ -1,6 +1,6 @@
 class RouletteRoundService
   COLORS = %w[verde rojo negro].freeze
-  COLOR_PROBABILITIES = [0.02, 0.49, 0.49] # verde, rojo, negro
+  COLOR_PROBABILITIES = [ 0.02, 0.49, 0.49 ] # verde, rojo, negro
 
   def self.perform
     Rails.logger.info "Jugando una ronda de ruleta"
@@ -9,8 +9,13 @@ class RouletteRoundService
     players = Player.where("money > 0")
 
     bets = players.map do |player|
-      Rails.logger.info "Jugador #{player.name} apuesta #{player.money}"
-      amount = bet_amount(player.money)
+      Rails.logger.info "Jugador #{player.name} tiene #{player.money}"
+      hot_week_ahead = WeatherService.hot_week_ahead?
+      amount = if player.profile == "ia"
+        ia_bet_amount(player, hot_week_ahead)
+      else
+        bet_amount(player.money)
+      end
       color = pick_color
       Rails.logger.info "Jugador #{player.name} apuesta #{amount} a #{color}"
       Bet.create!(
@@ -22,13 +27,13 @@ class RouletteRoundService
     end
 
     result = pick_color
-    Rails.logger.info "Resultado de la ronda: #{result}"
     round.update!(result: result)
 
     bets.each do |bet|
       payout = payout_for_bet(bet, result)
       player = bet.player
       player.update!(money: player.money - bet.amount + payout)
+      bet.update!(winnings: payout)
     end
 
     round
@@ -36,7 +41,15 @@ class RouletteRoundService
 
   def self.bet_amount(money)
     return money if money <= 1000
-    percent = rand(8..15) / 100.0
+
+    hot_week_ahead = WeatherService.hot_week_ahead?
+
+    if hot_week_ahead
+      percent = rand(3..7) / 100.0
+    else
+      percent = rand(8..15) / 100.0
+    end
+
     (money * percent).to_i
   end
 
@@ -56,5 +69,9 @@ class RouletteRoundService
     else
       bet.amount * 2
     end
+  end
+
+  def self.ia_bet_amount(player, hot_week_ahead)
+    OpenAiRequest.perform(player, hot_week_ahead)
   end
 end

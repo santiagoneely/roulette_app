@@ -2,6 +2,7 @@ class RouletteRoundJob < ApplicationJob
   queue_as :default
 
   def perform
-    RouletteRoundService.play!
+     Rails.logger.info ">>> Ejecutando RouletteRoundJob en #{Time.current}"
+    RouletteRoundService.perform
   end
 end

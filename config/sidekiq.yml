@@ -1,5 +1,10 @@
 :concurrency: 5
+:redis:
+  :url: redis://localhost:6380/0
 :schedule:
   roulette_round_job:
     every: "3m"
     class: "RouletteRoundJob"
+  daily_reset_job:
+    cron: "0 0 * * *" # Todos los días a la medianoche
+    class: "DailyResetJob"

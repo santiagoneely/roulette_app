@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "rounds/index"
+  get "rounds/show"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -10,10 +12,15 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "rounds#index"
 
   resources :players
+  resources :rounds, only: [ :index, :show ] do
+    collection do
+      post :play, to: "rounds#play"
+    end
+  end
 
-  require 'sidekiq/web'
-  mount Sidekiq::Web => '/sidekiq'
+  require "sidekiq/web"
+  mount Sidekiq::Web => "/sidekiq"
 end
