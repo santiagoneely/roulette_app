@@ -2,6 +2,18 @@
 
 Simulación de una mesa de ruleta con jugadores dinámicos y apuestas condicionadas por el clima de Santiago, Chile.
 
+A Cada jugador que creas, se le puede asignar:
+Monto de partida, que usará para sus apuestas. Al final de cada día se le suman $10.000
+Perfil: Normal o IA.
+   Normal apostará un numero random entre los porcentajes establecidos, dependiendo del clima.
+   IA hará una consulta a OpenIA que entregará un monto a apostar.
+
+   Cada 3 minutos, un worker ejecuta una ronda de juego, pero también se pueden ejecutar rondas manuales con un botón.
+
+   El monto de la apuesta depende del clima en los próximos 7 días en Santiago de Chile. Si habrá al menos un día con temperaturas pronosticadas sobre los 23ºC, los jugadores apuestan más conservador, entre 3 y 7% de su caja restante. Si está frío, apuestan entre 8 y 15%.
+
+   
+
 ## Requisitos
 
 - Ruby 3.4.4 (recomendado usar rbenv o RVM)
@@ -24,7 +36,9 @@ Simulación de una mesa de ruleta con jugadores dinámicos y apuestas condiciona
    ```
 
 3. **Configura las variables de entorno:**
-   Crea un archivo `.env` en la raíz del proyecto con:
+
+   Crea un archivo `.env` en la raíz del proyecto.
+   Puedes copiar el archivo .env.example y poner los valores de las API_KEY
    ```env
    WEATHER_API_KEY=tu_api_key_de_weatherapi
    OPENAI_API_KEY=tu_api_key_de_openai
@@ -66,54 +80,3 @@ Simulación de una mesa de ruleta con jugadores dinámicos y apuestas condiciona
 - Algunos jugadores pueden usar IA (OpenAI) para decidir sus apuestas.
 
 ---
-
-## Deploy en Render
-
-1. **Sube tu proyecto a GitHub.**
-
-2. **Crea una cuenta en [Render](https://render.com/).**
-
-3. **Crea un nuevo Web Service:**
-   - Haz clic en "New +" > "Web Service".
-   - Conecta tu cuenta de GitHub y selecciona el repositorio.
-   - Elige Ruby como entorno.
-   - Usa la rama principal (`main` o `master`).
-   - Build Command:
-     ```sh
-     bundle install && bundle exec rails db:migrate
-     ```
-   - Start Command:
-     ```sh
-     bundle exec rails server
-     ```
-
-4. **Crea un Worker para Sidekiq:**
-   - "New +" > "Background Worker".
-   - Usa el mismo repo y rama.
-   - Start Command:
-     ```sh
-     bundle exec sidekiq -C config/sidekiq.yml
-     ```
-
-5. **Agrega un servicio Redis:**
-   - "New +" > "Redis".
-   - Render te dará una URL, ponla como variable de entorno `REDIS_URL` en ambos servicios (web y worker).
-
-6. **Agrega una base de datos PostgreSQL:**
-   - "New +" > "PostgreSQL".
-   - Render te dará una URL, ponla como variable de entorno `DATABASE_URL`.
-
-7. **Agrega las variables de entorno necesarias:**
-   - `RAILS_ENV=production`
-   - `REDIS_URL=...` (la que te da Render)
-   - `DATABASE_URL=...` (la que te da Render)
-   - `WEATHER_API_KEY=...`
-   - `OPENAI_API_KEY=...`
-
-8. **Despliega y prueba:**
-   - Render hará el build y deploy automáticamente.
-   - Cuando termine, tendrás una URL pública para tu app.
-
----
-
-¿Listo! Ahora puedes compartir el link de Render para que los evaluadores accedan a la app en producción.

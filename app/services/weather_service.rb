@@ -19,15 +19,13 @@ class WeatherService
 
   # Método que evalúa si hay algún día con más de 23°C en el forecast
   def self.hot_week_ahead?
-    Rails.cache.fetch("hot_week_ahead", expires_in: 1.hour) do
-      response = forecast
-      return false unless response
+    response = forecast
+    return false unless response
 
-      forecast_days = response.dig("forecast", "forecastday")
-      return false unless forecast_days
+    forecast_days = response.dig("forecast", "forecastday")
+    return false unless forecast_days
 
-      temps_by_day = forecast_days.map { |day| { date: day["date"], max_temp: day["day"]["maxtemp_c"] } }
-      forecast_days.any? { |day| day["day"]["maxtemp_c"] > 23 }
-    end
+    temps_by_day = forecast_days.map { |day| { date: day["date"], max_temp: day["day"]["maxtemp_c"] } }
+    forecast_days.any? { |day| day["day"]["maxtemp_c"] > 23 }
   end
 end

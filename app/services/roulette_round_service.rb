@@ -2,20 +2,32 @@ class RouletteRoundService
   COLORS = %w[verde rojo negro].freeze
   COLOR_PROBABILITIES = [ 0.02, 0.49, 0.49 ] # verde, rojo, negro
 
-  def self.perform
+  def self.perform(origin: "manual")
     Rails.logger.info "Jugando una ronda de ruleta"
+    round = create_round(origin)
+    players = fetch_active_players
+    bets = create_bets_for_players(players, round)
+    result = pick_color
+    update_round_result(round, result)
+    process_bets_payouts(bets, result)
+    round
+  end
 
-    round = Round.create!(result: nil)
-    players = Player.where("money > 0")
+  private
 
-    bets = players.map do |player|
+  def self.create_round(origin)
+    Round.create!(result: nil, origin: origin)
+  end
+
+  def self.fetch_active_players
+    Player.where("money > 0")
+  end
+
+  def self.create_bets_for_players(players, round)
+    players.map do |player|
       Rails.logger.info "Jugador #{player.name} tiene #{player.money}"
       hot_week_ahead = WeatherService.hot_week_ahead?
-      amount = if player.profile == "ia"
-        ia_bet_amount(player, hot_week_ahead)
-      else
-        bet_amount(player.money)
-      end
+      amount = player.profile == "ia" ? ia_bet_amount(player, hot_week_ahead) : bet_amount(player.money)
       color = pick_color
       Rails.logger.info "Jugador #{player.name} apuesta #{amount} a #{color}"
       Bet.create!(
@@ -25,31 +37,25 @@ class RouletteRoundService
         color: color
       )
     end
+  end
 
-    result = pick_color
+  def self.update_round_result(round, result)
     round.update!(result: result)
+  end
 
+  def self.process_bets_payouts(bets, result)
     bets.each do |bet|
       payout = payout_for_bet(bet, result)
       player = bet.player
       player.update!(money: player.money - bet.amount + payout)
       bet.update!(winnings: payout)
     end
-
-    round
   end
 
   def self.bet_amount(money)
     return money if money <= 1000
-
     hot_week_ahead = WeatherService.hot_week_ahead?
-
-    if hot_week_ahead
-      percent = rand(3..7) / 100.0
-    else
-      percent = rand(8..15) / 100.0
-    end
-
+    percent = hot_week_ahead ? rand(3..7) / 100.0 : rand(8..15) / 100.0
     (money * percent).to_i
   end
 
@@ -64,11 +70,7 @@ class RouletteRoundService
 
   def self.payout_for_bet(bet, result)
     return 0 unless bet.color == result
-    if result == "verde"
-      bet.amount * 15
-    else
-      bet.amount * 2
-    end
+    result == "verde" ? bet.amount * 15 : bet.amount * 2
   end
 
   def self.ia_bet_amount(player, hot_week_ahead)

@@ -17,9 +17,10 @@
 <table>
   <thead>
     <tr>
-      <th>Fecha/Hora</th>
-      <th>Resultado Ruleta</th>
-      <th>Apuestas</th>
+      <th>Fecha/Hora - </th>
+      <th>Resultado -</th>
+      <th>Origen -</th>
+      <th>Apuestas -</th>
     </tr>
   </thead>
   <tbody>
@@ -27,6 +28,7 @@
       <tr>
         <td><%= round.created_at.strftime("%d-%m-%Y %H:%M") %></td>
         <td><%= round.result.present? ? round.result.capitalize : "Pendiente" %></td>
+        <td><%= round.origin.present? ? round.origin == 'manual' ? 'Manual' : 'Automático' : '' %></td>
         <td>
           <ul>
             <% round.bets.each do |bet| %>

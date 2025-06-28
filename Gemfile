@@ -7,7 +7,7 @@ gem "propshaft"
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1", group: :production
 # Use sqlite3 as the database for development and test
-gem "sqlite3", group: [:development, :test]
+gem "sqlite3", group: [ :development, :test ]
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
@@ -18,12 +18,12 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
-gem 'httparty'
-gem 'dotenv-rails'
-gem 'sidekiq'
-gem 'sidekiq-scheduler'
-gem 'openai'
-gem 'ruby-openai'
+gem "httparty"
+gem "dotenv-rails"
+gem "sidekiq"
+gem "sidekiq-scheduler"
+gem "openai"
+gem "ruby-openai"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -32,9 +32,9 @@ gem 'ruby-openai'
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
-gem "solid_cache"
-gem "solid_queue"
-gem "solid_cable"
+# gem "solid_cache"
+# gem "solid_queue"
+# gem "solid_cable"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -57,7 +57,6 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
-
 end
 
 group :development do
