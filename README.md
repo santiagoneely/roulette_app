@@ -39,10 +39,10 @@ Perfil: Normal o IA.
 
    Crea un archivo `.env` en la raíz del proyecto.
    Puedes copiar el archivo .env.example y poner los valores de las API_KEY
+   O usar el archivo .env.example
    ```env
    WEATHER_API_KEY=tu_api_key_de_weatherapi
    OPENAI_API_KEY=tu_api_key_de_openai
-   REDIS_URL=redis://localhost:6379/0
    ```
 
 4. **Configura la base de datos:**

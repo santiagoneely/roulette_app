@@ -5,7 +5,7 @@ class RouletteRoundService
   def self.perform(origin: "manual")
     Rails.logger.info "Jugando una ronda de ruleta"
     round = create_round(origin)
-    players = fetch_active_players
+    players = active_players
     bets = create_bets_for_players(players, round)
     result = pick_color
     update_round_result(round, result)
@@ -19,8 +19,8 @@ class RouletteRoundService
     Round.create!(result: nil, origin: origin)
   end
 
-  def self.fetch_active_players
-    Player.where("money > 0")
+  def self.active_players
+    Player.active
   end
 
   def self.create_bets_for_players(players, round)

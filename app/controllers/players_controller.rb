@@ -34,7 +34,7 @@ class PlayersController < ApplicationController
   end
 
   def destroy
-    @player.destroy
+    @player.soft_delete
     redirect_to players_url, notice: "Player was successfully destroyed."
   end
 
