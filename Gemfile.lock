@@ -209,6 +209,7 @@ GEM
     openai (0.11.0)
       connection_pool
     ostruct (0.6.2)
+    pagy (9.3.4)
     parallel (1.27.0)
     parser (3.3.8.0)
       ast (~> 2.4.1)
@@ -400,6 +401,7 @@ DEPENDENCIES
   jbuilder
   kamal
   openai
+  pagy
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)

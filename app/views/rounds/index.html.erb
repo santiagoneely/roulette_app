@@ -47,3 +47,9 @@
     <% end %>
   </tbody>
 </table>
+<style>
+  .pagy.nav a, .pagy.nav span, .pagy.nav .current {
+    margin: 0 6px;
+  }
+</style>
+<%= pagy_nav(@pagy, pagy_url: ->(n) { rounds_path(page: n) }).html_safe if @pagy.pages > 1 %>
