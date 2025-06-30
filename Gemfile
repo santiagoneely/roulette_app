@@ -23,6 +23,7 @@ gem "dotenv-rails"
 gem "sidekiq"
 gem "sidekiq-scheduler"
 gem "openai"
+gem 'pagy'
 gem "ruby-openai"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]

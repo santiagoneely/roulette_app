@@ -1,6 +1,7 @@
 class RoundsController < ApplicationController
+  include Pagy::Backend
   def index
-    @rounds = Round.order(created_at: :desc).includes(bets: :player).limit(50)
+    @pagy, @rounds = pagy(Round.order(created_at: :desc).includes(bets: :player))
   end
 
   def show
